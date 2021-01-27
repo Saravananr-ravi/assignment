@@ -1,5 +1,6 @@
 package com.bank.employee.manager;
 
+import com.bank.employee.bean.DnaCandidate;
 import com.bank.employee.bean.Employee;
 
 import java.time.DayOfWeek;
@@ -82,10 +83,11 @@ public class EmployeeServiceImpl {
         //employeeList.stream().filter(predicate).collect(Collectors.toList()).forEach(System.out::println);
     }
 
-    public List<Employee> getCandidateList() {
+    public List<DnaCandidate> getCandidateList() {
         List<Employee> employeeList = getAllEmployee();
         Predicate<Employee> predicate = s -> ChronoUnit.YEARS.between(s.getJoiningDate(), LocalDateTime.now()) > 7;
-        return employeeList.stream().filter(predicate).collect(Collectors.toList());
+        return employeeList.stream().filter(predicate).map(temp->
+                 new DnaCandidate(temp.getName(),temp.getJoiningDate(),temp.getIsManger())).collect(Collectors.toList());
     }
 
     public void getWorkingDays() {
@@ -96,17 +98,19 @@ public class EmployeeServiceImpl {
         List<DayOfWeek> weekEnd = new ArrayList<>();
         weekEnd.add(DayOfWeek.SATURDAY);
         weekEnd.add(DayOfWeek.SUNDAY);
-
+        long daysBetween=ChronoUnit.DAYS.between(firstDayNextWeek,lastDayOfNextWeek);
         Predicate<LocalDate> isWorkingDay = d -> !(weekEnd.contains(d.getDayOfWeek()) || holiday.contains(d));
-        int addedDays = 0;
-        for (LocalDate date = firstDayNextWeek; (date.isEqual(lastDayOfNextWeek) ||
+        long workingDays=Stream.iterate(firstDayNextWeek,date->date.plusDays(1)).limit(daysBetween).filter(isWorkingDay).count();
+
+        Stream.iterate(firstDayNextWeek,date->date.plusDays(1)).limit(daysBetween).filter(isWorkingDay).map(LocalDate::getDayOfWeek).forEach(System.out::println);
+       /* for (LocalDate date = firstDayNextWeek; (date.isEqual(lastDayOfNextWeek) ||
                 date.isBefore(lastDayOfNextWeek)); date = date.plusDays(1)) {
             if (isWorkingDay.test(date)) {
-                ++addedDays;
+                ++workingDays;
                 System.out.println(date.getDayOfWeek());
             }
-        }
-        System.out.println(addedDays+" working days");
+        }*/
+        System.out.println(workingDays+" working days");
     }
 
     private List<Employee> getAllEmployee() {

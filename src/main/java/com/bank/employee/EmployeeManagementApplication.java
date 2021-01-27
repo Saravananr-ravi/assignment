@@ -1,5 +1,6 @@
 package com.bank.employee;
 
+import com.bank.employee.bean.DnaCandidate;
 import com.bank.employee.bean.Employee;
 import com.bank.employee.manager.EmployeeServiceImpl;
 import org.springframework.boot.CommandLineRunner;
@@ -42,7 +43,7 @@ public class EmployeeManagementApplication implements CommandLineRunner {
         display.accept("****************");
 
         display.accept("**************** Get employee> 7 years****************");
-        List<Employee> candidateList=employeeService.getCandidateList();
+        List<DnaCandidate> candidateList=employeeService.getCandidateList();
         candidateList.forEach(System.out::println);
         display.accept("****************");
 
