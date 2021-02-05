@@ -1,12 +1,10 @@
 package com.scb.bank.app.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @Entity
@@ -30,17 +28,12 @@ public class TransactionDetails implements Serializable {
     private String transactType;
 
     @Column(name = "transaction_amount")
-    private long transactAmount;
+    private float transactAmount;
 
     @Column(name = "closing_balance")
-    private long closingBalance;
+    private float closingBalance;
 
     @Column(name = "transaction_date")
     private LocalDate transactDate;
-
-
-  /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="account_id",nullable = false)
-    private Account account;*/
 
 }

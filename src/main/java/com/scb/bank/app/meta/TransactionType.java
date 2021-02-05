@@ -11,5 +11,5 @@ public enum TransactionType {
     DEBIT("debit"),
     CREDIT("credit");
 
-    private final String transactionType;
+    private final String transaction;
 }

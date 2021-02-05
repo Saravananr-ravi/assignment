@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -27,38 +26,38 @@ public class FundTransferServiceImpl implements FundTransferService {
 
     @Override
     @Transactional
-    public String doFundTransfer(long fromAcc, long toAccNo, int amountToTransfer) {
+    public String doFundTransfer(long fromAcc, long toAccNo, float amountToTransfer) {
 
         Optional<Account> fromAccount = accountRepository.findById(fromAcc);
         Optional<Account> toAccount = accountRepository.findById(toAccNo);
 
         if (fromAccount.isPresent() && toAccount.isPresent()) {
             if (!fromAccount.get().getId().equals(toAccount.get().getId())) {
-                if (fromAccount.get().getAccountBalance() != 0 && fromAccount.get().getAccountBalance() >= amountToTransfer) {
+                if (Float.compare(fromAccount.get().getAccountBalance(),0.0f)!= 0 && fromAccount.get().getAccountBalance() >= amountToTransfer) {
                     //debit from account
                     try {
-                        long fromClosingBalance=fromAccount.get().getAccountBalance() - amountToTransfer;
+                        float fromClosingBalance = fromAccount.get().getAccountBalance() - amountToTransfer;
                         fromAccount.get().setAccountBalance(fromAccount.get().getAccountBalance() - amountToTransfer);
                         accountRepository.save(fromAccount.get());
                         TransactionDetails fromTransaction = new TransactionDetails();
                         fromTransaction.setTransactDate(LocalDate.now());
                         fromTransaction.setTransactAmount(-amountToTransfer);
-                        fromTransaction.setTransactType(TransactionType.DEBIT.getTransactionType());
+                        fromTransaction.setTransactType(TransactionType.DEBIT.getTransaction());
                         fromTransaction.setAccountNumber(fromAccount.get().getId());
                         fromTransaction.setClosingBalance(fromClosingBalance);
-                        fromTransaction.setTransactInfo(String.format("Transferred amount to %s",toAccNo));
+                        fromTransaction.setTransactInfo(String.format("Transferred amount to %s", toAccNo));
                         transactionRepository.save(fromTransaction);
                         //credit to account
-                        long toClosingBalance=toAccount.get().getAccountBalance() + amountToTransfer;
+                        float toClosingBalance = toAccount.get().getAccountBalance() + amountToTransfer;
                         toAccount.get().setAccountBalance(toAccount.get().getAccountBalance() + amountToTransfer);
                         accountRepository.save(toAccount.get());
                         TransactionDetails toTransaction = new TransactionDetails();
                         toTransaction.setTransactDate(LocalDate.now());
                         toTransaction.setTransactAmount(amountToTransfer);
-                        toTransaction.setTransactType(TransactionType.CREDIT.getTransactionType());
+                        toTransaction.setTransactType(TransactionType.CREDIT.getTransaction());
                         toTransaction.setAccountNumber(toAccount.get().getId());
                         toTransaction.setClosingBalance(toClosingBalance);
-                        toTransaction.setTransactInfo(String.format("Credited amount from %s",fromAcc));
+                        toTransaction.setTransactInfo(String.format("Credited amount from %s", fromAcc));
                         transactionRepository.save(toTransaction);
                     } catch (RuntimeException ex) {
                         throw new TransactionFailureException();

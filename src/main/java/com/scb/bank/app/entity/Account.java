@@ -1,15 +1,19 @@
 package com.scb.bank.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 
 @Data
+@Cacheable
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "account")
 public class Account implements Serializable {
@@ -25,12 +29,8 @@ public class Account implements Serializable {
             message = "User can not be registered with zero account balance"
     )
     @Column(name = "account_balance")
-    private long accountBalance;
+    private float accountBalance;
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    //@JsonIgnore
-    /*@OneToMany(mappedBy="account", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private Set<Transaction> transactionSet;*/
 }

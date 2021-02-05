@@ -16,7 +16,7 @@ public class FundTransferController {
 
     @PostMapping("fund_transfer")
     public String fundTransfer(@NotBlank @RequestParam long fromAccountNo,
-                               @NotBlank @RequestParam long toAccountNo, @Min(value = 1, message = "Amount must be greater then Zero") @RequestParam int amtToTransfer) {
+                               @NotBlank @RequestParam long toAccountNo, @Min(value = 1, message = "Amount must be greater then Zero") @RequestParam float amtToTransfer) {
         return fundTransferServiceImpl.doFundTransfer(fromAccountNo, toAccountNo, amtToTransfer);
     }
 }

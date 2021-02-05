@@ -6,7 +6,6 @@ import com.scb.bank.app.meta.ResponseMessageType;
 import com.scb.bank.app.repository.UserRepository;
 import com.scb.bank.app.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             return ResponseMessageType.USER_ALREADY_EXIST.getType();
         } else {
             userRepository.save(user);
-            return String.format("%s: %s",ResponseMessageType.USER_REGISTRATION.getType(),userRepository.findByPanNumber(user.getPanNumber()).get().getAccount().getId());
+            return String.format("%s: %s", ResponseMessageType.USER_REGISTRATION.getType(), account.getId());
         }
     }
 

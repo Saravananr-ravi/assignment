@@ -18,9 +18,9 @@ public class BankAppCustomExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
-        AtomicReference<String> errorMsg= new AtomicReference<>();
+        AtomicReference<String> errorMsg = new AtomicReference<>();
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
+        ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errorMsg.set(errorMessage);
